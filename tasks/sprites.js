@@ -9,8 +9,8 @@ import errorHandler from 'gulp-plumber-error-handler';
 const cwd = path.join(__dirname, '..');
 const spritesDirPath = 'app/sprites';
 const imgPath = '../images/sprites/';
-const tmplName = 'stylus_retina.template.handlebars';
-const tmplPath = '../node_modules/spritesmith-stylus-retina-template';
+const tmplName = 'scss_retina.template.handlebars';
+const tmplPath = '../app/styles/helpers';
 const cssTemplate = path.join(__dirname, tmplPath, tmplName);
 
 gulp.task('sprites', () => {
@@ -26,8 +26,8 @@ gulp.task('sprites', () => {
 			spritesmith(options) {
 				options.imgPath = imgPath + options.imgName;
 				options.retinaImgPath = imgPath + options.retinaImgName;
-				options.cssName = options.cssName.replace(/\.css$/, '.styl');
-				options.cssFormat = 'stylus';
+				options.cssName = options.cssName.replace(/\.css$/, '.scss');
+				options.cssFormat = 'scss';
 				options.cssTemplate = cssTemplate;
 				options.algorithm = 'binary-tree';
 				options.padding = 8;

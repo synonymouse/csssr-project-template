@@ -13,7 +13,7 @@ const BLOCKS_DIR = path.join(__dirname, 'app/blocks');
 // default content for files in new block
 const fileSources = {
 	jade: `mixin {blockName}()\n\t+b.{blockName}&attributes(attributes)\n\t\t| {blockName}\n`,
-	styl: `.{blockName}\n\tdisplay block\n`
+	scss: `.{blockName} {\n\tdisplay: block;\n}`
 };
 
 function validateBlockName(blockName) {
@@ -58,10 +58,28 @@ function createDir(dirPath) {
 
 function createFiles(blocksPath, blockName) {
 	const promises = [];
-	Object.keys(fileSources).forEach(ext => {
-		const fileSource = fileSources[ext].replace(/\{blockName}/g, blockName);
-		const filename = `${blockName}.${ext}`;
+	Object.keys(fileSources).reduceRight(scss => {
+		const fileSource = fileSources[scss].replace(/\{blockName}/g, blockName);
+		const filename = `_${blockName}.${scss}`;
 		const filePath = path.join(blocksPath, filename);
+
+		promises.push(
+				new Promise((resolve, reject) => {
+					fs.writeFile(filePath, fileSource, 'utf8', err => {
+						if (err) {
+							reject(`ERR>>> Failed to create a file '${filePath}'`);
+						} else {
+							resolve();
+						}
+					});
+				})
+		);
+	});
+
+	Object.keys(fileSources).reduce(jade => {
+	const fileSource = fileSources[jade].replace(/\{blockName}/g, blockName);
+	const filename = `${blockName}.${jade}`;
+	const filePath = path.join(blocksPath, filename);
 
 		promises.push(
 				new Promise((resolve, reject) => {
